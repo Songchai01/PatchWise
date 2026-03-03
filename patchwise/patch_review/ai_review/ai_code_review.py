@@ -497,6 +497,15 @@ regulator-name.
         )
         self.reviewer_context = all_docs
 
+        # DEBUG: dump crawled docs for inspection
+        try:
+            rc_path = os.path.join(self.crawler_config["CACHE_DIR"], "reviewer_context.json")
+            with open(rc_path, "w", encoding="utf-8") as _f:
+                json.dump(all_docs, _f, ensure_ascii=False, indent=2, default=str)
+            self.logger.debug(f"[DEBUG] reviewer_context written to {rc_path}")
+        except Exception as _e:
+            self.logger.warning(f"[DEBUG] Could not write reviewer_context.json: {_e}")
+
     def run(self) -> str:
         """Execute the AI code review."""
         try:
@@ -521,7 +530,7 @@ regulator-name.
             additional_context=additional_context,
         )
 
-        # self.logger.debug(f"System prompt:\n{self.get_system_prompt()}") # TEMP
+        self.logger.debug(f"System prompt:\n{self.get_system_prompt()}")  # DEBUG
         self.logger.debug(f"Formatted prompt for AI review:\n{formatted_prompt}")
 
         # Write prompts to sandbox for debugging

@@ -24,7 +24,7 @@ from patchwise.utils.decorators import lru_cache_cb, retry
 urllib3.disable_warnings()
 
 DEFAULT_MODEL = "Pro"
-DEFAULT_API_BASE = "https://api.openai.com/v1"
+DEFAULT_API_BASE = "https://qgenie-chat.qualcomm.com/v1"
 AGENT_MAX_ITERATIONS = 50
 
 # Container-side tree-sitter indexer path
@@ -95,6 +95,7 @@ class Agent:
     def completion_with_retry(self, **kwargs) -> Any:
         kwargs.setdefault("model", Agent.model)
         kwargs.setdefault("api_base", Agent.api_base)
+        kwargs.setdefault("api_key", os.environ.get("QGENIE_API_KEY"))
         self.logger.debug(
             f"Making API call with model: {self.model}, api_base: {Agent.api_base}"
         )
